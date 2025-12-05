@@ -17,13 +17,23 @@
 - **地點**：作者設定的所在地（例如：台灣）
 - **加入時間**：加入 Threads 的時間
 
+## 截圖
+
+![動態中的地點標籤](screenshots/feed-badge.png)
+
+![擴充功能彈出視窗](screenshots/popup.png)
+
 ## 安裝方式
 
-1. 開啟 Chrome，前往 `chrome://extensions/`
-2. 開啟右上角的「**開發人員模式**」
-3. 點擊「**載入未封裝項目**」
-4. 選擇 `lee-su-thread` 資料夾
-5. 擴充功能圖示會出現在工具列
+> ⏳ **Chrome Web Store 審核中**，若對以下操作不熟悉，建議等待 Chrome Web Store 版本上架。
+
+1. 前往 [Releases 頁面](https://github.com/meettomorrow/lee-su-threads/releases) 下載最新版本的 ZIP 檔
+2. 解壓縮 ZIP 檔
+3. 開啟 Chrome，前往 `chrome://extensions/`
+4. 開啟右上角的「**開發人員模式**」
+5. 點擊「**載入未封裝項目**」
+6. 選擇解壓縮後的資料夾
+7. 擴充功能圖示會出現在工具列
 
 ## 使用方式
 
@@ -62,11 +72,15 @@ A Chrome extension that automatically displays location info for Threads post au
 
 ### Installation
 
-1. Open Chrome and navigate to `chrome://extensions/`
-2. Enable **Developer mode** (toggle in top-right corner)
-3. Click **Load unpacked**
-4. Select the `lee-su-thread` folder
-5. The extension icon should appear in your toolbar
+> ⏳ **Pending Chrome Web Store review.** If you're not familiar with the steps below, please wait for the Chrome Web Store version.
+
+1. Download the latest ZIP from [Releases](https://github.com/meettomorrow/lee-su-threads/releases)
+2. Unzip the file
+3. Open Chrome and navigate to `chrome://extensions/`
+4. Enable **Developer mode** (toggle in top-right corner)
+5. Click **Load unpacked**
+6. Select the unzipped folder
+7. The extension icon should appear in your toolbar
 
 ### Usage
 
