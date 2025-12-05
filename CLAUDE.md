@@ -4,18 +4,19 @@ This file provides guidance for Claude Code when working on this project.
 
 ## Project Overview
 
-**Lee-Su-Threads** is a Chrome extension that automatically displays location info for Threads post authors without visiting each profile. It intercepts Threads API responses to extract and cache user profile data.
+**Lee-Su-Threads** is a browser extension (Chrome & Firefox) that automatically displays location info for Threads post authors without visiting each profile. It intercepts Threads API responses to extract and cache user profile data.
 
 ## Tech Stack
 
-- **Chrome Extension Manifest V3**
+- **Browser Extension Manifest V3** (Chrome & Firefox)
 - **Vanilla JavaScript** (no frameworks)
 - **Vitest** for testing
 
 ## Project Structure
 
 ```
-├── manifest.json          # Extension manifest
+├── manifest.json          # Chrome extension manifest
+├── manifest.firefox.json  # Firefox extension manifest
 ├── background.js          # Service worker
 ├── content.js             # Content script (injects injected.js)
 ├── injected.js            # Main logic (runs in page context)
@@ -34,10 +35,22 @@ This file provides guidance for Claude Code when working on this project.
     └── ko/messages.json     # Korean
 ```
 
+## Cross-Browser Compatibility
+
+**IMPORTANT:** Always use `browserAPI` instead of `chrome.*` or `browser.*` directly.
+
+All JS files define a compatibility layer at the top:
+
+```javascript
+const browserAPI = typeof browser !== "undefined" ? browser : chrome;
+```
+
+Use `browserAPI.storage`, `browserAPI.runtime`, `browserAPI.i18n`, etc.
+
 ## Localization
 
 - Default locale is `zh_TW` (Traditional Chinese)
-- Use `chrome.i18n.getMessage("key")` in JavaScript
+- Use `browserAPI.i18n.getMessage("key")` in JavaScript
 - Use `__MSG_key__` in manifest.json
 - Message keys are defined in `_locales/{locale}/messages.json`
 
@@ -57,9 +70,9 @@ This file provides guidance for Claude Code when working on this project.
 
 ### Caching
 
-- Profile data cached in `chrome.storage.local`
-- Cache expires after 24 hours
-- User ID → username mapping cached separately
+- Profile data cached in `browserAPI.storage.local`
+- Cache expires after 72 hours
+- User ID → username mapping cached separately (30 days)
 
 ## Commands
 

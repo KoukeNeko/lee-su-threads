@@ -74,8 +74,8 @@
 
     const toast = document.createElement('div');
     toast.id = 'threads-rate-limit-toast';
-    const warningMsg = chrome.i18n.getMessage('rateLimitWarning') || '⚠️ Too many location queries. Rate limited by Threads.';
-    const resumeMsg = chrome.i18n.getMessage('rateLimitResume') || 'Resume auto-fetch';
+    const warningMsg = browserAPI.i18n.getMessage('rateLimitWarning') || '⚠️ Too many location queries. Rate limited by Threads.';
+    const resumeMsg = browserAPI.i18n.getMessage('rateLimitResume') || 'Resume auto-fetch';
     toast.innerHTML = `
       <span>${warningMsg}</span>
       <button id="threads-resume-btn">${resumeMsg}</button>
@@ -150,13 +150,13 @@
     const badge = document.createElement('span');
     badge.className = 'threads-profile-info-badge';
 
-    const joinedLabel = chrome.i18n.getMessage('joined') || 'Joined';
+    const joinedLabel = browserAPI.i18n.getMessage('joined') || 'Joined';
     if (profileInfo.location) {
       badge.innerHTML = `📍 ${escapeHtml(profileInfo.location)}`;
       badge.title = `${joinedLabel}: ${profileInfo.joined || 'Unknown'}`;
     } else {
       // Location not available
-      const noLocationText = chrome.i18n.getMessage('noLocation') || 'No location';
+      const noLocationText = browserAPI.i18n.getMessage('noLocation') || 'No location';
       badge.innerHTML = `🌐 ${noLocationText}`;
       badge.title = profileInfo.joined ? `${joinedLabel}: ${profileInfo.joined}` : noLocationText;
     }
@@ -603,12 +603,12 @@
   }
 
   // Load auto-query setting from storage
-  chrome.storage.local.get(['autoQueryEnabled'], (result) => {
+  browserAPI.storage.local.get(['autoQueryEnabled']).then((result) => {
     autoQueryEnabled = result.autoQueryEnabled !== false;
   });
 
   // Listen for setting changes from popup
-  chrome.runtime.onMessage.addListener((message) => {
+  browserAPI.runtime.onMessage.addListener((message) => {
     if (message.type === 'AUTO_QUERY_CHANGED') {
       autoQueryEnabled = message.enabled;
       console.log('[Threads Extractor] Auto-query', autoQueryEnabled ? 'enabled' : 'disabled');

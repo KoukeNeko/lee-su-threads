@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let filterText = '';
 
   // Load and handle auto-query setting
-  chrome.storage.local.get(['autoQueryEnabled'], (result) => {
+  browserAPI.storage.local.get(['autoQueryEnabled']).then((result) => {
     // Default to true if not set
     const enabled = result.autoQueryEnabled !== false;
     autoQueryToggle.checked = enabled;
@@ -24,11 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   autoQueryToggle.addEventListener('change', () => {
     const enabled = autoQueryToggle.checked;
-    chrome.storage.local.set({ autoQueryEnabled: enabled });
+    browserAPI.storage.local.set({ autoQueryEnabled: enabled });
     // Notify content script
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    browserAPI.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
       if (tabs[0]?.id) {
-        chrome.tabs.sendMessage(tabs[0].id, { type: 'AUTO_QUERY_CHANGED', enabled });
+        browserAPI.tabs.sendMessage(tabs[0].id, { type: 'AUTO_QUERY_CHANGED', enabled });
       }
     });
   });
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Localize UI elements
   function localizeUI() {
     document.querySelectorAll('[data-i18n]').forEach(el => {
-      const msg = chrome.i18n.getMessage(el.dataset.i18n);
+      const msg = browserAPI.i18n.getMessage(el.dataset.i18n);
       if (msg) {
         el.textContent = msg;
       }
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
   localizeUI();
 
   // Localize filter placeholder
-  const filterPlaceholder = chrome.i18n.getMessage('filterPlaceholder') || 'Filter by location...';
+  const filterPlaceholder = browserAPI.i18n.getMessage('filterPlaceholder') || 'Filter by location...';
   locationFilter.placeholder = filterPlaceholder;
 
   // Handle location filter
@@ -82,8 +82,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (entries.length === 0) {
       const emptyMsg = filterText
-        ? (chrome.i18n.getMessage('noLocation') || 'No location')
-        : (chrome.i18n.getMessage('emptyState') || 'No profiles extracted yet.\nBrowse Threads to capture profile info.');
+        ? (browserAPI.i18n.getMessage('noLocation') || 'No location')
+        : (browserAPI.i18n.getMessage('emptyState') || 'No profiles extracted yet.\nBrowse Threads to capture profile info.');
       profileListEl.innerHTML = `
         <div class="empty-state">
           <div class="empty-state-icon">${filterText ? '🔍' : '🔍'}</div>
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     URL.revokeObjectURL(url);
 
-    showToast(chrome.i18n.getMessage('exportSuccess') || 'Exported successfully!');
+    showToast(browserAPI.i18n.getMessage('exportSuccess') || 'Exported successfully!');
   });
 
   // Copy to clipboard
@@ -145,20 +145,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       await navigator.clipboard.writeText(dataStr);
-      showToast(chrome.i18n.getMessage('copySuccess') || 'Copied to clipboard!');
+      showToast(browserAPI.i18n.getMessage('copySuccess') || 'Copied to clipboard!');
     } catch (err) {
       console.error('Failed to copy:', err);
-      showToast(chrome.i18n.getMessage('copyFailed') || 'Failed to copy', true);
+      showToast(browserAPI.i18n.getMessage('copyFailed') || 'Failed to copy', true);
     }
   });
 
   // Clear cache
   clearBtn.addEventListener('click', () => {
-    if (confirm(chrome.i18n.getMessage('confirmClear') || 'Are you sure you want to clear all cached profiles?')) {
+    if (confirm(browserAPI.i18n.getMessage('confirmClear') || 'Are you sure you want to clear all cached profiles?')) {
       browserAPI.storage.local.set({ profileCache: {} }, () => {
         profiles = {};
         loadProfiles();
-        showToast(chrome.i18n.getMessage('cacheCleared') || 'Cache cleared!');
+        showToast(browserAPI.i18n.getMessage('cacheCleared') || 'Cache cleared!');
       });
     }
   });
