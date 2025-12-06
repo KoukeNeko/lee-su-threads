@@ -13,11 +13,21 @@
 
       body {
         width: 360px;
-        min-height: 200px;
+        max-height: 500px;
+        overflow-y: auto;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           sans-serif;
         background: linear-gradient(135deg, #1a1a2e 0%, #0f0f23 100%);
         color: #e0e0e0;
+      }
+
+      body::-webkit-scrollbar {
+        width: 4px;
+      }
+
+      body::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 2px;
       }
 
       .header {
@@ -70,67 +80,113 @@
         letter-spacing: 0.5px;
       }
 
-      .actions {
+      .toggle-card {
         display: flex;
         flex-direction: column;
-        gap: 8px;
-      }
-
-      .btn {
-        display: flex;
         align-items: center;
         justify-content: center;
         gap: 8px;
-        padding: 10px 16px;
+      }
+
+      .filter-row {
+        margin-bottom: 12px;
+      }
+
+      .filter-input {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.05);
+        color: #e0e0e0;
+        font-size: 13px;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+
+      .filter-input::placeholder {
+        color: #666;
+      }
+
+      .filter-input:focus {
+        border-color: #667eea;
+      }
+
+      .btn-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
         border: none;
         border-radius: 8px;
-        font-size: 13px;
-        font-weight: 500;
+        font-size: 16px;
         cursor: pointer;
         transition: all 0.2s;
-      }
-
-      .btn-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: #fff;
-      }
-
-      .btn-primary:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-      }
-
-      .btn-secondary {
         background: rgba(255, 255, 255, 0.1);
-        color: #e0e0e0;
       }
 
-      .btn-secondary:hover {
-        background: rgba(255, 255, 255, 0.15);
+      .btn-icon:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(1.05);
       }
 
-      .btn-danger {
-        background: rgba(239, 68, 68, 0.2);
-        color: #ef4444;
-      }
-
-      .btn-danger:hover {
+      .btn-icon-danger:hover {
         background: rgba(239, 68, 68, 0.3);
       }
 
+      .footer-actions {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+
+      .toggle-switch {
+        position: relative;
+        width: 44px;
+        height: 24px;
+      }
+
+      .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(255, 255, 255, 0.2);
+        transition: 0.3s;
+        border-radius: 24px;
+      }
+
+      .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 18px;
+        width: 18px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.3s;
+        border-radius: 50%;
+      }
+
+      .toggle-switch input:checked + .toggle-slider {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+
+      .toggle-switch input:checked + .toggle-slider:before {
+        transform: translateX(20px);
+      }
+
       .profile-list {
-        margin-top: 16px;
-        max-height: 200px;
-        overflow-y: auto;
-      }
-
-      .profile-list::-webkit-scrollbar {
-        width: 4px;
-      }
-
-      .profile-list::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 2px;
+        margin-top: 8px;
       }
 
       .profile-item {
@@ -198,7 +254,9 @@
       .footer {
         padding: 12px 20px;
         border-top: 1px solid rgba(255, 255, 255, 0.1);
-        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
 
       .footer a {
@@ -210,51 +268,198 @@
       .footer a:hover {
         text-decoration: underline;
       }
+
+      .tabs {
+        display: flex;
+        gap: 0;
+        margin-bottom: 16px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        padding: 4px;
+      }
+
+      .tab-btn {
+        flex: 1;
+        padding: 8px 12px;
+        border: none;
+        background: transparent;
+        color: #888;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        border-radius: 6px;
+        transition: all 0.2s;
+      }
+
+      .tab-btn:hover {
+        color: #e0e0e0;
+      }
+
+      .tab-btn.active {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+      }
+
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      .location-stats-list {
+        margin-top: 8px;
+      }
+
+      .location-stat-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 12px;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 8px;
+        margin-bottom: 8px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .location-stat-item:hover {
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .location-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex: 1;
+        overflow: hidden;
+      }
+
+      .location-content {
+        flex: 1;
+        overflow: hidden;
+      }
+
+      .location-name {
+        font-size: 13px;
+        color: #fff;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .location-count {
+        font-size: 13px;
+        font-weight: 600;
+        color: #667eea;
+        background: rgba(102, 126, 234, 0.15);
+        padding: 4px 10px;
+        border-radius: 12px;
+        min-width: 32px;
+        text-align: center;
+      }
+
+      .location-bar {
+        height: 4px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 2px;
+        margin-top: 6px;
+        overflow: hidden;
+      }
+
+      .location-bar-fill {
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 2px;
+        transition: width 0.3s ease;
+      }
     </style>
   </head>
   <body>
     <div class="header">
-      <h1>📋 Threads Profile Extractor</h1>
-      <p>Extract profile info from your feed</p>
+      <h1>📋 <span data-i18n="popupTitle">Threads Profile Extractor</span></h1>
+      <p data-i18n="popupSubtitle">Extract profile info from your feed</p>
     </div>
 
     <div class="content">
       <div class="stats">
         <div class="stat-card">
           <div class="stat-value" id="profileCount">0</div>
-          <div class="stat-label">Profiles</div>
+          <div class="stat-label" data-i18n="profiles">Profiles</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-value" id="sessionCount">0</div>
-          <div class="stat-label">This Session</div>
+        <div class="stat-card toggle-card">
+          <label class="toggle-switch">
+            <input type="checkbox" id="autoQueryToggle" checked />
+            <span class="toggle-slider"></span>
+          </label>
+          <div class="stat-label" data-i18n="autoQuery">Auto-query</div>
         </div>
       </div>
 
-      <div class="actions">
-        <button class="btn btn-primary" id="exportBtn">
-          <span>📥</span> Export as JSON
+      <div class="tabs">
+        <button
+          class="tab-btn active"
+          data-tab="profiles"
+          data-i18n="tabProfiles"
+        >
+          Profiles
         </button>
-        <button class="btn btn-secondary" id="copyBtn">
-          <span>📋</span> Copy to Clipboard
-        </button>
-        <button class="btn btn-danger" id="clearBtn">
-          <span>🗑️</span> Clear Cache
+        <button class="tab-btn" data-tab="locations" data-i18n="tabLocations">
+          Location Stats
         </button>
       </div>
 
-      <div class="profile-list" id="profileList">
-        <div class="empty-state">
-          <div class="empty-state-icon">🔍</div>
-          <div class="empty-state-text">
-            No profiles extracted yet.<br />
-            Browse Threads to capture profile info.
+      <div id="profilesTab" class="tab-content active">
+        <div class="filter-row">
+          <input
+            type="text"
+            id="locationFilter"
+            class="filter-input"
+            placeholder="Filter by location..."
+          />
+        </div>
+
+        <div class="profile-list" id="profileList">
+          <div class="empty-state">
+            <div class="empty-state-icon">🔍</div>
+            <div class="empty-state-text" data-i18n="emptyState">
+              No profiles extracted yet.<br />
+              Browse Threads to capture profile info.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="locationsTab" class="tab-content">
+        <div class="location-stats-list" id="locationStatsList">
+          <div class="empty-state">
+            <div class="empty-state-icon">📍</div>
+            <div class="empty-state-text" data-i18n="noLocationStats">
+              No location data yet.<br />
+              Browse Threads to capture profile locations.
+            </div>
           </div>
         </div>
       </div>
     </div>
 
     <div class="footer">
-      <a href="https://www.threads.com" target="_blank">Open Threads.com →</a>
+      <div class="footer-actions">
+        <button class="btn-icon" id="exportBtn" data-i18n-title="exportTitle">
+          📥
+        </button>
+        <button class="btn-icon" id="copyBtn" data-i18n-title="copyTitle">
+          📋
+        </button>
+        <button
+          class="btn-icon btn-icon-danger"
+          id="clearBtn"
+          data-i18n-title="clearTitle"
+        >
+          🗑️
+        </button>
+      </div>
     </div>
 
     <script src="popup.js"></script>

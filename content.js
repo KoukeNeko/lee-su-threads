@@ -3,6 +3,9 @@
 (function() {
   'use strict';
 
+  // Cross-browser compatibility: use browser.* API if available (Firefox), fallback to chrome.*
+  const browserAPI = typeof browser !== 'undefined' ? browser : chrome;
+
   // Store extracted profiles
   const profileCache = new Map();
 
@@ -10,10 +13,11 @@
   const fetchQueue = [];
   let isFetching = false;
   let autoFetchReady = false; // Wait for initial data to load
+  let autoQueryEnabled = true; // User preference for auto-query
   let rateLimitedUntil = 0; // Timestamp when rate limit cooldown ends
   const FETCH_DELAY_MS = 800; // Delay between auto-fetches to avoid rate limiting
   const INITIAL_DELAY_MS = 2000; // Wait for bulk-route-definitions to load
-  const RATE_LIMIT_COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes cooldown
+  const RATE_LIMIT_COOLDOWN_MS = 30 * 60 * 1000; // 30 minutes cooldown
   const MAX_QUEUE_SIZE = 5; // Maximum number of posts in queue
   const VISIBILITY_DELAY_MS = 500; // How long a post must be visible before queuing
   const pendingVisibility = new Map(); // Track posts waiting to be queued
@@ -21,7 +25,7 @@
   // Inject the network interceptor script
   function injectScript() {
     const script = document.createElement('script');
-    script.src = chrome.runtime.getURL('injected.js');
+    script.src = browserAPI.runtime.getURL('injected.js');
     script.onload = function() {
       this.remove();
     };
@@ -35,7 +39,7 @@
       profileCache.set(profileInfo.username, profileInfo);
 
       // Send to background script for persistent storage
-      chrome.runtime.sendMessage({
+      browserAPI.runtime.sendMessage({
         type: 'PROFILE_INFO_EXTRACTED',
         data: profileInfo
       });
@@ -47,7 +51,7 @@
 
   // Listen for rate limit events
   window.addEventListener('threads-rate-limited', () => {
-    console.warn('[Threads Extractor] Rate limited! Pausing auto-fetch for 5 minutes.');
+    console.warn('[Threads Extractor] Rate limited! Pausing auto-fetch for 30 minutes.');
     rateLimitedUntil = Date.now() + RATE_LIMIT_COOLDOWN_MS;
     showRateLimitToast();
   });
@@ -57,7 +61,7 @@
     if (event.data?.type === 'threads-new-user-ids') {
       const newUserIds = event.data.data;
       if (newUserIds && Object.keys(newUserIds).length > 0) {
-        chrome.runtime.sendMessage({ type: 'STORE_USER_IDS', data: newUserIds });
+        browserAPI.runtime.sendMessage({ type: 'STORE_USER_IDS', data: newUserIds });
       }
     }
   });
@@ -70,9 +74,11 @@
 
     const toast = document.createElement('div');
     toast.id = 'threads-rate-limit-toast';
+    const warningMsg = browserAPI.i18n.getMessage('rateLimitWarning') || '⚠️ Too many location queries. Rate limited by Threads.';
+    const resumeMsg = browserAPI.i18n.getMessage('rateLimitResume') || 'Resume auto-fetch';
     toast.innerHTML = `
-      <span>⚠️ 地點查詢太多次，被 Threads 限制了，5 分鐘內不會自動查，請點擊按鈕手動試試</span>
-      <button id="threads-resume-btn">繼續自動查詢</button>
+      <span>${warningMsg}</span>
+      <button id="threads-resume-btn">${resumeMsg}</button>
       <button id="threads-dismiss-toast">✕</button>
     `;
     document.body.appendChild(toast);
@@ -144,6 +150,7 @@
     const badge = document.createElement('span');
     badge.className = 'threads-profile-info-badge';
 
+    const joinedLabel = browserAPI.i18n.getMessage('joined') || 'Joined';
     if (profileInfo.location) {
       badge.textContent = profileInfo.location;
       badge.title = `Joined: ${profileInfo.joined || 'Unknown'}`;
@@ -241,6 +248,12 @@
   // Process the fetch queue with throttling
   async function processFetchQueue() {
     if (isFetching || fetchQueue.length === 0) return;
+
+    // Check if auto-query is disabled
+    if (!autoQueryEnabled) {
+      console.log('[Threads Extractor] Auto-query disabled. Skipping queue processing.');
+      return;
+    }
 
     // Check if rate limited
     if (Date.now() < rateLimitedUntil) {
@@ -560,16 +573,18 @@
     observeFeed();
 
     // Load cached profiles from storage
-    chrome.runtime.sendMessage({ type: 'GET_CACHED_PROFILES' }, (cachedProfiles) => {
+    browserAPI.runtime.sendMessage({ type: 'GET_CACHED_PROFILES' }).then((cachedProfiles) => {
       if (cachedProfiles) {
         for (const [username, data] of Object.entries(cachedProfiles)) {
           profileCache.set(username, data);
         }
       }
+    }).catch((err) => {
+      console.warn('[Threads Extractor] Failed to load cached profiles:', err);
     });
 
     // Load cached user IDs and pass to injected script
-    chrome.runtime.sendMessage({ type: 'GET_USER_ID_CACHE' }, (cachedUserIds) => {
+    browserAPI.runtime.sendMessage({ type: 'GET_USER_ID_CACHE' }).then((cachedUserIds) => {
       if (cachedUserIds && Object.keys(cachedUserIds).length > 0) {
         const userIdMap = {};
         for (const [username, data] of Object.entries(cachedUserIds)) {
@@ -579,6 +594,8 @@
         // Pass to injected script
         window.postMessage({ type: 'threads-load-userid-cache', data: userIdMap }, '*');
       }
+    }).catch((err) => {
+      console.warn('[Threads Extractor] Failed to load cached user IDs:', err);
     });
 
     // Enable auto-fetch after initial delay (wait for bulk-route-definitions to load)
@@ -588,6 +605,22 @@
       processFetchQueue(); // Process any queued items
     }, INITIAL_DELAY_MS);
   }
+
+  // Load auto-query setting from storage
+  browserAPI.storage.local.get(['autoQueryEnabled']).then((result) => {
+    autoQueryEnabled = result.autoQueryEnabled !== false;
+  });
+
+  // Listen for setting changes from popup
+  browserAPI.runtime.onMessage.addListener((message) => {
+    if (message.type === 'AUTO_QUERY_CHANGED') {
+      autoQueryEnabled = message.enabled;
+      console.log('[Threads Extractor] Auto-query', autoQueryEnabled ? 'enabled' : 'disabled');
+      if (autoQueryEnabled) {
+        processFetchQueue();
+      }
+    }
+  });
 
   // Wait for DOM to be ready
   if (document.readyState === 'loading') {
