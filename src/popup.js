@@ -1,49 +1,8 @@
 // Popup script for Threads Profile Extractor
+import { parseJoinedDate, isNewUser } from './lib/dateParser.js';
 
 // Cross-browser compatibility: use browser.* API if available (Firefox), fallback to chrome.*
 const browserAPI = typeof browser !== 'undefined' ? browser : chrome;
-
-// Parse joined date string and return Date object
-function parseJoinedDate(joinedStr) {
-  if (!joinedStr) return null;
-
-  const monthMap = {
-    'january': 0, 'february': 1, 'march': 2, 'april': 3, 'may': 4, 'june': 5,
-    'july': 6, 'august': 7, 'september': 8, 'october': 9, 'november': 10, 'december': 11,
-    'jan': 0, 'feb': 1, 'mar': 2, 'apr': 3, 'jun': 5, 'jul': 6, 'aug': 7, 'sep': 8, 'oct': 9, 'nov': 10, 'dec': 11,
-  };
-
-  const yearMatch = joinedStr.match(/(\d{4})/);
-  if (!yearMatch) return null;
-  const year = parseInt(yearMatch[1], 10);
-
-  let month = null;
-  const cjkMonthMatch = joinedStr.match(/(\d{1,2})[月월]/);
-  if (cjkMonthMatch) {
-    month = parseInt(cjkMonthMatch[1], 10) - 1;
-  } else {
-    const lowerStr = joinedStr.toLowerCase();
-    for (const [name, idx] of Object.entries(monthMap)) {
-      if (lowerStr.includes(name)) {
-        month = idx;
-        break;
-      }
-    }
-  }
-
-  if (month === null) return null;
-  return new Date(year, month, 1);
-}
-
-// Check if user joined within the last N months
-function isNewUser(joinedStr, monthsThreshold = 2) {
-  const joinedDate = parseJoinedDate(joinedStr);
-  if (!joinedDate) return false;
-
-  const now = new Date();
-  const thresholdDate = new Date(now.getFullYear(), now.getMonth() - monthsThreshold, 1);
-  return joinedDate >= thresholdDate;
-}
 
 document.addEventListener('DOMContentLoaded', () => {
   const profileCountEl = document.getElementById('profileCount');

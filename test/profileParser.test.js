@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseProfileResponse } from '../lib/profileParser.js';
+import { parseProfileResponse } from '../src/lib/profileParser.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';

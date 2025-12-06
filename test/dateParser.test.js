@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseJoinedDate, isNewUser } from '../lib/dateParser.js';
+import { parseJoinedDate, isNewUser } from '../src/lib/dateParser.js';
 
 describe('parseJoinedDate', () => {
   // Supported locales: en, ja, ko, zh_CN, zh_TW
