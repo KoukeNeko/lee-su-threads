@@ -274,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return `
         <div class="location-stat-item" data-location="${escapeHtml(location)}">
           <div class="location-info">
-                        <div style="flex: 1; overflow: hidden;">
+                        <div class="location-content">
               <div class="location-name">${escapeHtml(location)}</div>
               <div class="location-bar">
                 <div class="location-bar-fill" style="width: ${percentage}%"></div>
@@ -292,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
       html += `
         <div class="location-stat-item" data-location="" style="opacity: 0.6;">
           <div class="location-info">
-                        <div style="flex: 1; overflow: hidden;">
+                        <div class="location-content">
               <div class="location-name">${escapeHtml(noLocLabel)}</div>
             </div>
           </div>
