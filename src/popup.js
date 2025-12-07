@@ -278,8 +278,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 2000);
   }
 
-  // escapeHtml is imported from lib/utils.js
-
   // Render location stats
   function renderLocationStats() {
     const entries = Object.entries(profiles);

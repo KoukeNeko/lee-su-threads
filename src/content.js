@@ -298,7 +298,7 @@ async function processFetchQueue() {
       continue;
     }
 
-    btn.innerHTML = '⏳';
+    btn.textContent = '⏳';
     await autoFetchProfile(username, btn);
 
     // Throttle: wait before next fetch
