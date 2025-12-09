@@ -36,7 +36,8 @@
 ### Homebrew（推薦）
 
 ```bash
-brew install koukeneko/tap/lee-su-threads
+brew tap koukeneko/tap
+brew install --cask lee-su-threads
 ```
 
 這會自動：
