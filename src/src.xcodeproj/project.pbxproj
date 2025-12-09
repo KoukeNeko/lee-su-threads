@@ -81,13 +81,13 @@
 		C82C758A2EE868AC00539630 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		C82C758B2EE868AE00539630 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C82C758D2EE868AE00539630 /* SafariWebExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebExtensionHandler.swift; sourceTree = "<group>"; };
-		C82C75922EE868AE00539630 /* ProductName.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProductName.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C82C75922EE868AE00539630 /* ProductName.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = ProductName.app; path = "Lee-Su-Threads.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C82C75952EE868AE00539630 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C82C75972EE868AE00539630 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		C82C759A2EE868AE00539630 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C82C759D2EE868AE00539630 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C82C759F2EE868AE00539630 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C82C75A42EE868AE00539630 /* ProductName.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProductName.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C82C75A42EE868AE00539630 /* ProductName.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = ProductName.app; path = "Lee-Su-Threads.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C82C75A62EE868AE00539630 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C82C75A92EE868AE00539630 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C82C75AB2EE868AE00539630 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -96,6 +96,14 @@
 		C82C75BA2EE868AE00539630 /* src Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "src Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C82C75BF2EE868AE00539630 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		C8D71EE22EE86EE30020F567 /* Resources */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		C82C758F2EE868AE00539630 /* Frameworks */ = {
@@ -166,7 +174,7 @@
 		C82C758C2EE868AE00539630 /* Shared (Extension) */ = {
 			isa = PBXGroup;
 			children = (
-				C82C75DE2EE868AF00539630 /* Resources */,
+				C8D71EE22EE86EE30020F567 /* Resources */,
 				C82C758D2EE868AE00539630 /* SafariWebExtensionHandler.swift */,
 			);
 			path = "Shared (Extension)";
@@ -220,14 +228,6 @@
 			);
 			path = "macOS (Extension)";
 			sourceTree = "<group>";
-		};
-		C82C75DE2EE868AF00539630 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Resources;
-			path = "Shared (Extension)";
-			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
@@ -286,6 +286,9 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				C8D71EE22EE86EE30020F567 /* Resources */,
+			);
 			name = "src Extension (iOS)";
 			packageProductDependencies = (
 			);
@@ -304,6 +307,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				C8D71EE22EE86EE30020F567 /* Resources */,
 			);
 			name = "src Extension (macOS)";
 			packageProductDependencies = (
