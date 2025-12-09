@@ -1,7 +1,7 @@
 # Documentation: https://docs.brew.sh/Cask-Cookbook
 cask "lee-su-threads" do
   version "0.3.6"
-  sha256 "c75c99d2241659096ea7d929a32486f012360977b21c68f7dc2796e437353a06"
+  sha256 "99dac30f74040beb41185fb17f80491097e95fb68041be2ce96e0d9f49626227"
 
   url "https://github.com/KoukeNeko/lee-su-threads/releases/download/v#{version}/Lee-Su-Threads-v#{version}.zip"
   name "Lee-Su-Threads"
