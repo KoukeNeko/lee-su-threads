@@ -37,6 +37,7 @@ jobs:
         run: |
           jq ".version = \"$VERSION\"" src/manifest.json > temp.json && mv temp.json src/manifest.json
           jq ".version = \"$VERSION\"" src/manifest.firefox.json > temp.json && mv temp.json src/manifest.firefox.json
+          jq ".version = \"$VERSION\"" src/manifest.firefox-direct.json > temp.json && mv temp.json src/manifest.firefox-direct.json
 
       - name: Build Chrome and Firefox AMO version
         run: |

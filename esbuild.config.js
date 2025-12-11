@@ -139,7 +139,7 @@ async function copyStaticFiles() {
   await copyStaticFilesForBrowser('chrome');
   await copyStaticFilesForBrowser('firefox');
 
-  console.log('✓ Static files copied to dist/chrome and dist/firefox');
+  console.log('✓ Static files copied to dist/chrome and dist/firefox-*');
 }
 
 async function build() {
