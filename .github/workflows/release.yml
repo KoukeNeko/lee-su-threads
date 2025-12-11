@@ -52,6 +52,18 @@ jobs:
       - name: Package extensions
         run: bash scripts/package.sh
 
+      - name: Validate packaged files exist
+        run: |
+          if [ ! -f "dist-zip/lee-su-threads-chrome-v${VERSION}.zip" ]; then
+            echo "Error: Chrome package not found"
+            exit 1
+          fi
+          if [ ! -f "dist-zip/lee-su-threads-firefox-v${VERSION}-amo.zip" ]; then
+            echo "Error: Firefox AMO package not found"
+            exit 1
+          fi
+          echo "✅ All required packages created successfully"
+
       - name: Sign Firefox extension (self-distributed)
         if: env.ENABLE_FIREFOX_SIGNING == 'true'
         timeout-minutes: 5
