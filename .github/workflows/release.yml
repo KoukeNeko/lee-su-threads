@@ -37,13 +37,15 @@ jobs:
 
       - name: Sign Firefox extension (self-distributed)
         if: secrets.FIREFOX_API_KEY != ''
+        timeout-minutes: 5
         run: |
           npx web-ext sign \
             --source-dir=dist/firefox \
             --artifacts-dir=dist-zip \
             --api-key=${{ secrets.FIREFOX_API_KEY }} \
             --api-secret=${{ secrets.FIREFOX_API_SECRET }} \
-            --channel=unlisted
+            --channel=unlisted \
+            --no-input
 
       - name: Rename signed Firefox extension
         if: secrets.FIREFOX_API_KEY != ''
