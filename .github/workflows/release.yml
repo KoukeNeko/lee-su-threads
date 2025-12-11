@@ -35,14 +35,25 @@ jobs:
       - name: Package extensions
         run: bash scripts/package.sh
 
-      - name: Sign Firefox extension
+      - name: Sign Firefox extension (self-distributed)
         run: |
           npx web-ext sign \
             --source-dir=dist/firefox \
             --artifacts-dir=dist-zip \
             --api-key=${{ secrets.FIREFOX_API_KEY }} \
-            --api-secret=${{ secrets.FIREFOX_API_SECRET }}
+            --api-secret=${{ secrets.FIREFOX_API_SECRET }} \
+            --channel=unlisted
         continue-on-error: true
+
+      - name: Rename signed Firefox extension
+        run: |
+          if [ -f dist-zip/lee_su_threads-*.xpi ]; then
+            mv dist-zip/lee_su_threads-*.xpi dist-zip/lee-su-threads-firefox-v${VERSION}-signed.xpi
+          fi
+
+      - name: Generate update manifest
+        run: |
+          sed "s/VERSION_PLACEHOLDER/$VERSION/g" updates.json.template > dist-zip/updates.json
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
