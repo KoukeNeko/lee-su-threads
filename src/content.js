@@ -60,6 +60,18 @@ window.addEventListener('threads-rate-limited', () => {
   showRateLimitToast();
 });
 
+// Keyboard shortcut: Ctrl+Shift+, to open settings
+document.addEventListener('keydown', (event) => {
+  // Check for Ctrl+Shift+, on all platforms (standard settings shortcut)
+  if (event.ctrlKey && event.shiftKey && event.key === ',') {
+    event.preventDefault();
+    console.log('[Threads Extractor] Opening settings via keyboard shortcut...');
+
+    // Open popup in a new tab
+    browserAPI.runtime.sendMessage({ type: 'OPEN_POPUP_TAB' });
+  }
+});
+
 // Listen for new user ID discoveries from injected script and persist them
 window.addEventListener('message', (event) => {
   if (event.data?.type === 'threads-new-user-ids') {
@@ -320,7 +332,7 @@ function addFetchButtons() {
   // Find all time elements that haven't been processed
   const timeElements = document.querySelectorAll('time:not([data-threads-info-added])');
 
-  timeElements.forEach(timeEl => {
+  timeElements.forEach(async timeEl => {
     // Mark as processed
     timeEl.setAttribute('data-threads-info-added', 'true');
 
@@ -349,7 +361,7 @@ function addFetchButtons() {
       const timeParent = timeEl.closest('span') || timeEl.parentElement;
       if (timeParent?.parentElement) {
         timeParent.parentElement.style.alignItems = 'center';
-        const badge = createProfileBadge(profileCache.get(username));
+        const badge = await createProfileBadge(profileCache.get(username));
         timeParent.parentElement.insertBefore(badge, timeParent.nextSibling);
       }
       return;
