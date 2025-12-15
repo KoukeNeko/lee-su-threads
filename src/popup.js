@@ -1,9 +1,14 @@
 // Popup script for Threads Profile Extractor
 import { isNewUser } from './lib/dateParser.js';
 import { formatLocation } from './lib/locationMapper.js';
+import { polyfillCountryFlagEmojis } from 'country-flag-emoji-polyfill';
 
 // Cross-browser compatibility: use browser.* API if available (Firefox), fallback to chrome.*
 const browserAPI = typeof browser !== 'undefined' ? browser : chrome;
+
+// Initialize country flag emoji polyfill for Windows compatibility (popup context)
+// Use local font to avoid CSP issues with CDN
+polyfillCountryFlagEmojis("Twemoji Country Flags", browserAPI.runtime.getURL('fonts/TwemojiCountryFlags.woff2'));
 
 // Theme detection and application
 function detectAndApplyTheme() {

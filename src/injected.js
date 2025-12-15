@@ -3,6 +3,9 @@ import { parseProfileResponse } from './lib/profileParser.js';
 
 'use strict';
 
+// Note: Font polyfill is loaded by content.js (same document, different context)
+// No need to load it again here
+
 // ========== LOGGING HELPERS ==========
 function logRequest(type, url, options = {}) {
   const logData = {
