@@ -1,5 +1,5 @@
 // Content script for Threads Profile Info Extractor
-import { findPostContainer, detectActiveTab, isUserListContext, findFollowButtonContainer } from './lib/domHelpers.js';
+import { findPostContainer, detectActiveTab, isUserListContext, findFollowButtonContainer, findUsernameFromTimeElement } from './lib/domHelpers.js';
 import { injectLocationUIForUser, createLocationBadge } from './lib/friendshipsUI.js';
 import { displayProfileInfo, autoFetchProfile, createProfileBadge } from './lib/postUI.js';
 import { isSingleUserNotification, findIconElement, extractIconColor } from './lib/notificationDetector.js';
@@ -465,14 +465,21 @@ function addFetchButtons() {
     }
 
     // Find the username for this post
-    const profileLink = postContainer.querySelector('a[href^="/@"]');
-    if (!profileLink) return;
+    // For reposts, there are TWO profile links: the reposter and the original poster
+    // We need to find the link closest to the time element (the original poster)
+    let { username } = findUsernameFromTimeElement(timeEl);
+    if (!username) {
+      // Fallback: use the first link in the container (old behavior)
+      const fallbackLink = postContainer.querySelector('a[href^="/@"]');
+      if (!fallbackLink) return;
 
-    const href = profileLink.getAttribute('href');
-    const match = href.match(/^\/@([\w.]+)/);
-    if (!match) return;
+      const href = fallbackLink.getAttribute('href');
+      // Match username links (with optional query params/hash), but not post links
+      const match = href.match(/^\/@([\w.]+)(?:[?#]|$)/);
+      if (!match) return;
 
-    const username = match[1];
+      username = match[1];
+    }
 
     // Detect if this is a user-list context (activity modal, followers/following)
     // vs a post timeline context
